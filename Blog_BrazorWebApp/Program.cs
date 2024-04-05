@@ -1,4 +1,7 @@
 using Blog_BrazorWebApp.Components;
+using Blog_BrazorWebApp.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blog_BrazorWebApp
 {
@@ -11,6 +14,11 @@ namespace Blog_BrazorWebApp
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection"));
+
+            builder.Services.AddQuickGridEntityFrameworkAdapter();;
 
             var app = builder.Build();
 

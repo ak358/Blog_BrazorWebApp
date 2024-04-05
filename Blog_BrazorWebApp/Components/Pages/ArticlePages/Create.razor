@@ -1,0 +1,58 @@
+﻿@page "/articles/create"
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
+@using Blog_BrazorWebApp.Model
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Article" OnValidSubmit="AddArticle" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="Article.Title" class="form-control" /> 
+                <ValidationMessage For="() => Article.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="content" class="form-label">Content:</label> 
+                <InputText id="content" @bind-Value="Article.Content" class="form-control" /> 
+                <ValidationMessage For="() => Article.Content" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdate" class="form-label">CreateDate:</label> 
+                <InputDate id="createdate" @bind-Value="Article.CreateDate" class="form-control" /> 
+                <ValidationMessage For="() => Article.CreateDate" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedate" class="form-label">UpdateDate:</label> 
+                <InputDate id="updatedate" @bind-Value="Article.UpdateDate" class="form-control" /> 
+                <ValidationMessage For="() => Article.UpdateDate" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/articles">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Article Article { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddArticle()
+    {
+        DB.Articles.Add(Article);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/articles");
+    }
+}

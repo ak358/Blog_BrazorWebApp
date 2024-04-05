@@ -1,0 +1,51 @@
+﻿@page "/articles/details"
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
+@using Blog_BrazorWebApp.Model
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Article</h4>
+    <hr />
+    @if (article is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@article.Title</dd>
+            <dt class="col-sm-2">Content</dt>
+            <dd class="col-sm-10">@article.Content</dd>
+            <dt class="col-sm-2">CreateDate</dt>
+            <dd class="col-sm-10">@article.CreateDate</dd>
+            <dt class="col-sm-2">UpdateDate</dt>
+            <dd class="col-sm-10">@article.UpdateDate</dd>
+        </dl>
+        <div>
+            <a href="@($"/articles/edit?id={article.Id}")">Edit</a> |
+            <a href="@($"/articles")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Article? article;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        article = await DB.Articles.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (article is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

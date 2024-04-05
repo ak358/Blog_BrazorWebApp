@@ -1,0 +1,25 @@
+﻿@page "/articles"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
+@using Blog_BrazorWebApp.Model
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="articles/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.Articles">
+    <PropertyColumn Property="article => article.Title" />
+    <PropertyColumn Property="article => article.Content" />
+    <PropertyColumn Property="article => article.CreateDate" />
+    <PropertyColumn Property="article => article.UpdateDate" />
+
+    <TemplateColumn Context="article">
+        <a href="@($"articles/edit?id={article.Id}")">Edit</a> |
+        <a href="@($"articles/details?id={article.Id}")">Details</a> |
+        <a href="@($"articles/delete?id={article.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
