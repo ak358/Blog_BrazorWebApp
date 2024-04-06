@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog_BrazorWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240405191536_Init")]
+    [Migration("20240405192741_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -56,25 +56,25 @@ namespace Blog_BrazorWebApp.Migrations
                         {
                             Id = 1,
                             Content = "本文１",
-                            CreateDate = new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8226),
+                            CreateDate = new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7246),
                             Title = "タイトル１",
-                            UpdateDate = new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8236)
+                            UpdateDate = new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7254)
                         },
                         new
                         {
                             Id = 2,
                             Content = "本文２",
-                            CreateDate = new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8237),
+                            CreateDate = new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7255),
                             Title = "タイトル２",
-                            UpdateDate = new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8237)
+                            UpdateDate = new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7255)
                         },
                         new
                         {
                             Id = 3,
                             Content = "本文３",
-                            CreateDate = new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8238),
+                            CreateDate = new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7256),
                             Title = "タイトル３",
-                            UpdateDate = new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8239)
+                            UpdateDate = new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7257)
                         });
                 });
 #pragma warning restore 612, 618

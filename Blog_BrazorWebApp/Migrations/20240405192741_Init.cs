@@ -34,9 +34,9 @@ namespace Blog_BrazorWebApp.Migrations
                 columns: new[] { "Id", "Content", "CreateDate", "Title", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, "本文１", new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8226), "タイトル１", new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8236) },
-                    { 2, "本文２", new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8237), "タイトル２", new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8237) },
-                    { 3, "本文３", new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8238), "タイトル３", new DateTime(2024, 4, 6, 4, 15, 35, 831, DateTimeKind.Local).AddTicks(8239) }
+                    { 1, "本文１", new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7246), "タイトル１", new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7254) },
+                    { 2, "本文２", new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7255), "タイトル２", new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7255) },
+                    { 3, "本文３", new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7256), "タイトル３", new DateTime(2024, 4, 6, 4, 27, 41, 266, DateTimeKind.Local).AddTicks(7257) }
                 });
         }
 

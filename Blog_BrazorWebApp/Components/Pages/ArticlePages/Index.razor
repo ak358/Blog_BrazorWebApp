@@ -1,4 +1,4 @@
-﻿@page "/articles"
+﻿@page "/"
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @using Blog_BrazorWebApp.Model
@@ -6,10 +6,6 @@
 <PageTitle>Index</PageTitle>
 
 <h1>Index</h1>
-
-<p>
-    <a href="articles/create">Create New</a>
-</p>
 
 <QuickGrid Class="table" Items="DB.Articles">
     <PropertyColumn Property="article => article.Title" />
