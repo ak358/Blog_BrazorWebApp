@@ -46,7 +46,7 @@ namespace Blog_BrazorWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Articles", (string)null);
 
                     b.HasData(
                         new

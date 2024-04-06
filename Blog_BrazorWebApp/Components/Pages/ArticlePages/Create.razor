@@ -10,7 +10,7 @@
 <h4>Article</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <EditForm method="post" Model="Article" OnValidSubmit="AddArticle" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
@@ -21,19 +21,18 @@
             </div>        
             <div class="mb-3">
                 <label for="content" class="form-label">Content:</label> 
-                <InputText id="content" @bind-Value="Article.Content" class="form-control" /> 
+                <InputTextArea id="content" @bind-Value="Article.Content" class="form-control" />
                 <ValidationMessage For="() => Article.Content" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="createdate" class="form-label">CreateDate:</label> 
-                <InputDate id="createdate" @bind-Value="Article.CreateDate" class="form-control" /> 
-                <ValidationMessage For="() => Article.CreateDate" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="updatedate" class="form-label">UpdateDate:</label> 
-                <InputDate id="updatedate" @bind-Value="Article.UpdateDate" class="form-control" /> 
-                <ValidationMessage For="() => Article.UpdateDate" class="text-danger" /> 
-            </div>        
+                <InputDate readonly id="createdate" @bind-Value="Article.CreateDate" class="form-control"/> 
+            </div>
+            <div class="mb-3" hidden>
+                <label for="createdate" class="form-label">UpdateDate:</label>
+                <InputDate readonly id="createdate" @bind-Value="Article.UpdateDate" class="form-control" />
+            </div>
+
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -53,6 +52,6 @@
     {
         DB.Articles.Add(Article);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/articles");
+        NavigationManager.NavigateTo("/");
     }
 }

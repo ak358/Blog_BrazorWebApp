@@ -60,6 +60,6 @@
     {
         DB.Articles.Remove(article!);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/articles");
+        NavigationManager.NavigateTo("/");
     }
 }
