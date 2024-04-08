@@ -2,6 +2,7 @@
 using Blog_BrazorWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Blog_BrazorWebApp
 {
@@ -20,6 +21,16 @@ namespace Blog_BrazorWebApp
 
             builder.Services.AddQuickGridEntityFrameworkAdapter();;
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => {
+                    options.Cookie.Name = "";
+                    options.LoginPath = "/login";
+                    options.Cookie.MaxAge = TimeSpan.FromMinutes(30);
+                    options.AccessDeniedPath = "/access-denied";
+                });
+            builder.Services.AddAuthorization();
+            builder.Services.AddCascadingAuthenticationState();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,6 +45,9 @@ namespace Blog_BrazorWebApp
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();

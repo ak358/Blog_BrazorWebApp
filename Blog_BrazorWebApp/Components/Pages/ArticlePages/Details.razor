@@ -1,8 +1,10 @@
 ﻿@page "/articles/details"
-@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
+
 @using Blog_BrazorWebApp.Model
-@inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+
+@inject NavigationManager NavigationManager
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Details</PageTitle>
@@ -22,11 +24,11 @@
             <dd class="col-sm-10">@article.Title</dd>
             
             <dt class="col-sm-2">Content</dt>
-            <pre>
-            <code class="language-csharp">
-                <dd class="col-sm-10">@article.Content</dd>
-            </code>
-            </pre>
+
+            <dd class="col-sm-10">
+                @article.Content
+            </dd>
+
             <dt class="col-sm-2">CreateDate</dt>
             <dd class="col-sm-10">@article.CreateDate</dd>
 
