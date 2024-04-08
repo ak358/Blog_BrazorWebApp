@@ -11,7 +11,7 @@ namespace Blog_BrazorWebApp.Data
         }
 
         public DbSet<Article> Articles { get; set; }
-
+        public DbSet<UserAccount> UserAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,13 @@ namespace Blog_BrazorWebApp.Data
                 new Article { Id = 2, Title = "タイトル２", Content = "本文２", CreateDate = DateTime.Now, UpdateDate = DateTime.Now },
                 new Article { Id = 3, Title = "タイトル３", Content = "本文３", CreateDate = DateTime.Now, UpdateDate = DateTime.Now }
             );
+
+            modelBuilder.Entity<UserAccount>().HasData(
+                new UserAccount { Id = 1, UserName = "admin", Password = "adminpass", Role = "Administrator" },
+                new UserAccount { Id = 2, UserName = "user", Password = "userpass", Role = "User"}
+            );
+
+
         }
     }
 }
