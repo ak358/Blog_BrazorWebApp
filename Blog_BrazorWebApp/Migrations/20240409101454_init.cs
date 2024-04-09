@@ -14,7 +14,7 @@ namespace Blog_BrazorWebApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "UserRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -23,7 +23,7 @@ namespace Blog_BrazorWebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,9 +40,9 @@ namespace Blog_BrazorWebApp.Migrations
                 {
                     table.PrimaryKey("PK_UserAccounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserAccounts_Roles_RoleId",
+                        name: "FK_UserAccounts_UserRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Roles",
+                        principalTable: "UserRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -71,7 +71,7 @@ namespace Blog_BrazorWebApp.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Roles",
+                table: "UserRoles",
                 columns: new[] { "Id", "RoleName" },
                 values: new object[,]
                 {
@@ -84,8 +84,8 @@ namespace Blog_BrazorWebApp.Migrations
                 columns: new[] { "Id", "Password", "RoleId", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "adminpass", 1, "admin" },
-                    { 2, "userpass", 2, "user" }
+                    { 1, "adminpass", 1, "admin@test.com" },
+                    { 2, "userpass", 2, "user@test.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -93,9 +93,9 @@ namespace Blog_BrazorWebApp.Migrations
                 columns: new[] { "Id", "Content", "CreateDate", "Title", "UpdateDate", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "本文１", new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5925), "タイトル１", new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5925), 1 },
-                    { 2, "本文２", new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5928), "タイトル２", new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5928), 1 },
-                    { 3, "本文３", new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5930), "タイトル３", new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5931), 2 }
+                    { 1, "本文１", new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8288), "タイトル１", new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8288), 1 },
+                    { 2, "本文２", new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8290), "タイトル２", new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8291), 1 },
+                    { 3, "本文３", new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8293), "タイトル３", new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8293), 2 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -119,7 +119,7 @@ namespace Blog_BrazorWebApp.Migrations
                 name: "UserAccounts");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "UserRoles");
         }
     }
 }

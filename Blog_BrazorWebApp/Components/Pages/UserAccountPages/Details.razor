@@ -3,39 +3,49 @@
 @using Blog_BrazorWebApp.Model
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@attribute [Authorize]
+
 
 <PageTitle>Details</PageTitle>
 
 <h1>Details</h1>
+@if (HttpContext.User.Claims.FirstOrDefault(c => c.Value == "administrator") != null)
+{
+    <div>
+        <h4>UserAccount</h4>
+        <hr />
+        @if (useraccount is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <dl class="row">
+                <dt class="col-sm-2">UserName</dt>
+                <dd class="col-sm-10">@useraccount.UserName</dd>
+                <dt class="col-sm-2">Password</dt>
+                <dd class="col-sm-10">@useraccount.Password</dd>
+                <dt class="col-sm-2">RoleId</dt>
+                <dd class="col-sm-10">@useraccount.RoleId</dd>
+            </dl>
+            <div>
+                <a href="@($"/useraccounts/edit?id={useraccount.Id}")">Edit</a> |
+                <a href="@($"/useraccounts")">Back to List</a>
+            </div>
+        }
+    </div>
 
-<div>
-    <h4>UserAccount</h4>
-    <hr />
-    @if (useraccount is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">UserName</dt>
-            <dd class="col-sm-10">@useraccount.UserName</dd>
-            <dt class="col-sm-2">Password</dt>
-            <dd class="col-sm-10">@useraccount.Password</dd>
-            <dt class="col-sm-2">RoleId</dt>
-            <dd class="col-sm-10">@useraccount.RoleId</dd>
-        </dl>
-        <div>
-            <a href="@($"/useraccounts/edit?id={useraccount.Id}")">Edit</a> |
-            <a href="@($"/useraccounts")">Back to List</a>
-        </div>
-    }
-</div>
+}
 
 @code {
     UserAccount? useraccount;
 
     [SupplyParameterFromQuery]
     public int Id { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {

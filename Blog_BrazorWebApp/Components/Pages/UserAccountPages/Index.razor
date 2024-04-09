@@ -1,24 +1,44 @@
 ﻿@page "/useraccounts"
 @using Microsoft.AspNetCore.Components.QuickGrid
-@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @using Blog_BrazorWebApp.Model
+
+@attribute [Authorize]
+
+@inject NavigationManager navigationManeger
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+@if (HttpContext.User.Claims.FirstOrDefault(c => c.Value == "administrator") != null)
+{
+    <h1>Index</h1>
+    <p>
+        <a href="/register">Create New</a>
+    </p>
 
-<p>
-    <a href="useraccounts/create">Create New</a>
-</p>
+    <QuickGrid Class="table" Items="DB.UserAccounts">
+        <PropertyColumn Property="useraccount => useraccount.UserName" />
+        <PropertyColumn Property="useraccount => useraccount.Password" />
+        <PropertyColumn Property="useraccount => useraccount.RoleId" />
 
-<QuickGrid Class="table" Items="DB.UserAccounts">
-    <PropertyColumn Property="useraccount => useraccount.UserName" />
-    <PropertyColumn Property="useraccount => useraccount.Password" />
-    <PropertyColumn Property="useraccount => useraccount.RoleId" />
+        <TemplateColumn Context="useraccount">
+            <a href="@($"useraccounts/edit?id={useraccount.Id}")">Edit</a> |
+            <a href="@($"useraccounts/details?id={useraccount.Id}")">Details</a> |
+            <a href="@($"useraccounts/delete?id={useraccount.Id}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
+else
+{
+    navigationManeger.NavigateTo("/access-denied");
+}
 
-    <TemplateColumn Context="useraccount">
-        <a href="@($"useraccounts/edit?id={useraccount.Id}")">Edit</a> |
-        <a href="@($"useraccounts/details?id={useraccount.Id}")">Details</a> |
-        <a href="@($"useraccounts/delete?id={useraccount.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+@code{
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; }
+
+    protected override void OnInitialized()
+    {
+    }
+
+}

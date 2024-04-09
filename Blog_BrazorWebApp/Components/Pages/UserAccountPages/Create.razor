@@ -4,11 +4,10 @@
 @inject NavigationManager NavigationManager
 @using System.Security.Claims;
 
-<PageTitle>Create</PageTitle>
+<PageTitle>新規登録</PageTitle>
 
-<h1>Create</h1>
+<h1>新規ユーザー登録</h1>
 
-<h4>UserAccount</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,28 +16,29 @@
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
                 <label for="username" class="form-label">UserName:</label> 
-                <InputText id="username" @bind-Value="UserAccount.UserName" class="form-control" /> 
-                <ValidationMessage For="() => UserAccount.UserName" class="text-danger" /> 
+                <InputText id="username" @bind-Value="UserAccount.UserName" class="form-control" />
             </div>        
             <div class="mb-3">
                 <label for="password" class="form-label">Password:</label> 
-                <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" /> 
-                <ValidationMessage For="() => UserAccount.Password" class="text-danger" /> 
+                <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password(confirm):</label>
-                <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" />
-                <ValidationMessage For="() => UserAccount.Password" class="text-danger" />
+                <Input id="password" class="form-control" />
             </div>
             @if (RoleName == "administrator")
             {
                 <div class="mb-3">
-                    <label for="roleid" class="form-label">RoleId:</label>
-                    <InputNumber id="roleid" @bind-Value="UserAccount.RoleId" class="form-control" />
-                    <ValidationMessage For="() => UserAccount.RoleId" class="text-danger" />
+                    <label for="roleName" class="form-label">RoleName:</label>
+                    <select id="roleName" class="form-control" @bind="SelectedRole">
+                        @foreach (var role in UserRoles)
+                        {
+                            <option value="@role.RoleName">@role.RoleName</option>
+                        }
+                    </select>
                 </div>
-
             }
+
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -55,26 +55,52 @@
     [SupplyParameterFromForm]
     public UserAccount UserAccount { get; set; } = new();
 
+    private List<UserRole> UserRoles;
+    private int RoleId;
     private string RoleName;
+    private string SelectedRole { get; set; }
 
     protected override void OnInitialized()
     {
-        if (!HttpContext.User.Identity.IsAuthenticated)
+        // ログインしていない場合は何もしない
+        if (HttpContext.User.Identity.IsAuthenticated)
         {
-            return;
-        }
+            // ユーザーのロールを取得
+            var user = HttpContext.User;
+            if (user != null)
+            {
+                RoleName = user.FindFirstValue(ClaimTypes.Role);
+            }
 
-        var user = HttpContext?.User;
-        if (user != null)
-        {
-            RoleName = user.FindFirstValue(ClaimTypes.Role);
+            // UserRole テーブルからすべてのロールを取得
+            UserRoles = DB.UserRoles.ToList();
+
         }
     }
 
     public async Task AddUserAccount()
     {
+        // ユーザー名の重複チェック
+        if (DB.UserAccounts.Any(u => u.UserName == UserAccount.UserName))
+        {
+            return;
+        }
+
+        if (SelectedRole != null)
+        {
+            RoleName = SelectedRole;
+        }
+        else
+        {
+            RoleName = "user";
+        }
+
+        RoleId = DB.UserAccounts.FirstOrDefault(u => u.UserRole.RoleName == RoleName).RoleId;
+        UserAccount.RoleId = RoleId;
+
         DB.UserAccounts.Add(UserAccount);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/useraccounts");
+        NavigationManager.NavigateTo("/login");
+
     }
 }

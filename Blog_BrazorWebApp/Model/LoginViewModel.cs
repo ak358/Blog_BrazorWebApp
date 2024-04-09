@@ -11,6 +11,5 @@ namespace Blog_BrazorWebApp.Model
         [Required(AllowEmptyStrings = false)]
         public string? Password { get; set; }
 
-
     }
 }

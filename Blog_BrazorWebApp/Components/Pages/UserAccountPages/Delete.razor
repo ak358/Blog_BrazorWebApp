@@ -1,10 +1,14 @@
 ﻿@page "/useraccounts/delete"
+
+@attribute [Authorize]
+
+@inject NavigationManager navigationManeger
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
-@using Blog_BrazorWebApp.Model
-@inject NavigationManager NavigationManager
-@using Microsoft.EntityFrameworkCore
 
 <PageTitle>Delete</PageTitle>
+
+@if (HttpContext.User.Claims.FirstOrDefault(c => c.Value == "administrator") != null)
+{
 
 <h1>Delete</h1>
 
@@ -35,6 +39,12 @@
         </EditForm>
     }
 </div>
+}
+else
+{
+    navigationManeger.NavigateTo("/access-denied");
+}
+
 
 @code {
     UserAccount? useraccount;
@@ -42,13 +52,16 @@
     [SupplyParameterFromQuery]
     public int Id { get; set; }
 
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         useraccount = await DB.UserAccounts.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (useraccount is null)
         {
-            NavigationManager.NavigateTo("notfound");
+            navigationManeger.NavigateTo("notfound");
         }
     }
 
@@ -56,6 +69,6 @@
     {
         DB.UserAccounts.Remove(useraccount!);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/useraccounts");
+        navigationManeger.NavigateTo("/useraccounts");
     }
 }

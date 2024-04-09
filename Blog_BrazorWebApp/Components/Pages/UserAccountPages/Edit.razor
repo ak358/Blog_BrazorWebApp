@@ -3,49 +3,57 @@
 @using Blog_BrazorWebApp.Model
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@attribute [Authorize]
+
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
+@if (HttpContext.User.Claims.FirstOrDefault(c => c.Value == "administrator") != null)
+{
+    <h1>Edit</h1>
 
-<h4>UserAccount</h4>
-<hr />
-@if (UserAccount is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="UserAccount" OnValidSubmit="UpdateUserAccount" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <input type="hidden" name="UserAccount.Id" value="@UserAccount.Id" />
-                <div class="mb-3">
-                    <label for="username" class="form-label">UserName:</label>
-                    <InputText id="username" @bind-Value="UserAccount.UserName" class="form-control" />
-                    <ValidationMessage For="() => UserAccount.UserName" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" />
-                    <ValidationMessage For="() => UserAccount.Password" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="roleid" class="form-label">RoleId:</label>
-                    <InputNumber id="roleid" @bind-Value="UserAccount.RoleId" class="form-control" />
-                    <ValidationMessage For="() => UserAccount.RoleId" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
+    <h4>UserAccount</h4>
+    <hr />
+    @if (UserAccount is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <EditForm method="post" Model="UserAccount" OnValidSubmit="UpdateUserAccount" FormName="edit" Enhance>
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <input type="hidden" name="UserAccount.Id" value="@UserAccount.Id" />
+                    <div class="mb-3">
+                        <label for="username" class="form-label">UserName:</label>
+                        <InputText id="username" @bind-Value="UserAccount.UserName" class="form-control" />
+                        <ValidationMessage For="() => UserAccount.UserName" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" />
+                        <ValidationMessage For="() => UserAccount.Password" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="roleid" class="form-label">RoleId:</label>
+                        <InputNumber id="roleid" @bind-Value="UserAccount.RoleId" class="form-control" />
+                        <ValidationMessage For="() => UserAccount.RoleId" class="text-danger" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </EditForm>
+            </div>
         </div>
+    }
+
+    <div>
+        <a href="/useraccounts">Back to List</a>
     </div>
+
 }
 
-<div>
-    <a href="/useraccounts">Back to List</a>
-</div>
+
 
 @code {
     [SupplyParameterFromQuery]
@@ -53,6 +61,10 @@ else
 
     [SupplyParameterFromForm]
     public UserAccount? UserAccount { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {

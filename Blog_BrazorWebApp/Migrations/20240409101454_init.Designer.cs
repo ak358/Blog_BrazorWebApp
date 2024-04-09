@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog_BrazorWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240409080729_init")]
+    [Migration("20240409101454_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -61,27 +61,27 @@ namespace Blog_BrazorWebApp.Migrations
                         {
                             Id = 1,
                             Content = "本文１",
-                            CreateDate = new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5925),
+                            CreateDate = new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8288),
                             Title = "タイトル１",
-                            UpdateDate = new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5925),
+                            UpdateDate = new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8288),
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             Content = "本文２",
-                            CreateDate = new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5928),
+                            CreateDate = new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8290),
                             Title = "タイトル２",
-                            UpdateDate = new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5928),
+                            UpdateDate = new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8291),
                             UserId = 1
                         },
                         new
                         {
                             Id = 3,
                             Content = "本文３",
-                            CreateDate = new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5930),
+                            CreateDate = new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8293),
                             Title = "タイトル３",
-                            UpdateDate = new DateTime(2024, 4, 9, 17, 7, 28, 420, DateTimeKind.Local).AddTicks(5931),
+                            UpdateDate = new DateTime(2024, 4, 9, 19, 14, 53, 905, DateTimeKind.Local).AddTicks(8293),
                             UserId = 2
                         });
                 });
@@ -115,14 +115,14 @@ namespace Blog_BrazorWebApp.Migrations
                             Id = 1,
                             Password = "adminpass",
                             RoleId = 1,
-                            UserName = "admin"
+                            UserName = "admin@test.com"
                         },
                         new
                         {
                             Id = 2,
                             Password = "userpass",
                             RoleId = 2,
-                            UserName = "user"
+                            UserName = "user@test.com"
                         });
                 });
 
@@ -139,7 +139,7 @@ namespace Blog_BrazorWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("UserRoles");
 
                     b.HasData(
                         new

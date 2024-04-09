@@ -8,6 +8,7 @@
 <p>ログアウトしました。</p>
 
 @code {
+    //Authorize 属性は、HttpContext.User.Identity.IsAuthenticated プロパティが true であるかどうかを確認します
 
     [CascadingParameter]
     public HttpContext? httpContext { get; set; }

@@ -12,7 +12,7 @@ namespace Blog_BrazorWebApp.Data
 
         public DbSet<Article> Articles { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
-        public DbSet<UserRole> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -10,7 +10,16 @@
     <main>
         <div class="top-row px-4">
 
-            @if (httpContext.User.Identity.IsAuthenticated)
+            <div class="">
+                <AuthorizeView>
+                    <Authorized>
+                        <p>@context.User.Identity.Name がログイン中</p>
+                    </Authorized>
+                </AuthorizeView>
+
+            </div>
+
+            @if (HttpContext.User.Identity.IsAuthenticated)
             {
                 <NavLink class="nav-link" href="logout">
                     <span>logout</span>
@@ -22,11 +31,6 @@
                     <span>login</span>
                 </NavLink>
             }
-
-            <NavLink class="nav-link" href="register">
-                <span>Register(under construction)</span>
-            </NavLink>
-
 
         </div>
 
@@ -45,6 +49,6 @@
 @code{
 
     [CascadingParameter]
-    public HttpContext? httpContext { get; set; }
+    public HttpContext? HttpContext { get; set; }
 
 }

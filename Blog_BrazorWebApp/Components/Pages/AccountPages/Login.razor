@@ -36,13 +36,13 @@
 
 @code {
     [CascadingParameter]
-    public HttpContext? httpContext{ get; set; }
+    public HttpContext? HttpContext{ get; set; }
 
     [SupplyParameterFromForm]
     public LoginViewModel loginViewModel { get; set; } = new();
 
     private string? errorMessage;
-    
+
     //ログイン処理
     private async Task Authenticate()
     {
@@ -51,11 +51,10 @@
             .Where(u => u.UserName == loginViewModel.UserName)
             .FirstOrDefault();
 
-        
+
         if(user is null || user.Password != loginViewModel.Password)
         {
-            errorMessage = "ログイン情報が無効です。";
-            return;
+            navigationManeger.NavigateTo("/access-denied");
         }
 
         var claims = new List<Claim>
@@ -66,7 +65,10 @@
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
-        await httpContext.SignInAsync(principal);
+        await HttpContext.SignInAsync(principal);
+
+        // HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Role").Value;
+
         navigationManeger.NavigateTo("/");
     }
 }
