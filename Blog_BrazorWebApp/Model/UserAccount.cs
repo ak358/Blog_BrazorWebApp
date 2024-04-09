@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace Blog_BrazorWebApp.Model
 {
@@ -10,7 +11,10 @@ namespace Blog_BrazorWebApp.Model
 
         public string? Password { get; set; }
 
-        public string? Role { get; set; }
+        [ForeignKey("UserRole")]
+        public int RoleId { get; set; }
+
+        public UserRole? UserRole { get; set; }
 
     }
 }

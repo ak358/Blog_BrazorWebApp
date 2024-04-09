@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +9,25 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+
+            @if (httpContext.User.Identity.IsAuthenticated)
+            {
+                <NavLink class="nav-link" href="logout">
+                    <span>logout</span>
+                </NavLink>
+            }
+            else
+            {
+                <NavLink class="nav-link" href="login">
+                    <span>login</span>
+                </NavLink>
+            }
+
+            <NavLink class="nav-link" href="register">
+                <span>Register(under construction)</span>
+            </NavLink>
+
+
         </div>
 
         <article class="content px-4">
@@ -21,3 +41,10 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code{
+
+    [CascadingParameter]
+    public HttpContext? httpContext { get; set; }
+
+}

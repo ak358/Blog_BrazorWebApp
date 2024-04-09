@@ -1,11 +1,10 @@
 ﻿@page "/articles/details"
 
-@using Blog_BrazorWebApp.Model
-@using Microsoft.EntityFrameworkCore
-
 @inject NavigationManager NavigationManager
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @inject IJSRuntime JSRuntime
+
+@attribute [Authorize]
 
 <PageTitle>Details</PageTitle>
 

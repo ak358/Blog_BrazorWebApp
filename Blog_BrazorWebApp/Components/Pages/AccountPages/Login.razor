@@ -1,0 +1,73 @@
+﻿@page "/login"
+
+@inject ApplicationDbContext DB;
+@inject NavigationManager navigationManeger
+
+@using Blog_BrazorWebApp.Model
+@using Blog_BrazorWebApp.Data
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+
+<PageTitle>ログイン</PageTitle>
+
+  <div class="d-flex align-items-center py-4 bg-body-tertiary">
+    <main class="form-signin w-100 m-auto">
+        <h1 class="h3 mb-3 fw-normal">ログイン</h1>
+
+        <EditForm method="post" Model="loginViewModel" OnValidSubmit="Authenticate" FormName="LoginForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+
+            <div class="form-floating">
+              <InputText @bind-Value="loginViewModel.UserName"　type="email" class="form-control" id="floatingInput" placeholder="name@example.com"/>
+              <label for="floatingInput">ユーザー名</label>
+            </div>
+            <div class="form-floating">
+                    <InputText @bind-Value="loginViewModel.Password"  type="password" class="form-control" id="floatingPassword" placeholder="Password" />
+                <label for="floatingPassword">パスワード</label>
+            </div>
+            <p>@errorMessage</p>
+            <button class="btn btn-primary w-100 py-2" type="submit">ログイン</button>
+        </EditForm>
+
+    </main>
+</div>
+
+@code {
+    [CascadingParameter]
+    public HttpContext? httpContext{ get; set; }
+
+    [SupplyParameterFromForm]
+    public LoginViewModel loginViewModel { get; set; } = new();
+
+    private string? errorMessage;
+    
+    //ログイン処理
+    private async Task Authenticate()
+    {
+        var user = DB.UserAccounts
+            .Include(u => u.UserRole)
+            .Where(u => u.UserName == loginViewModel.UserName)
+            .FirstOrDefault();
+
+        
+        if(user is null || user.Password != loginViewModel.Password)
+        {
+            errorMessage = "ログイン情報が無効です。";
+            return;
+        }
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name,loginViewModel.UserName),
+            new Claim(ClaimTypes.Role,user.UserRole.RoleName)
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+        await httpContext.SignInAsync(principal);
+        navigationManeger.NavigateTo("/");
+    }
+}
+

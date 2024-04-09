@@ -15,5 +15,10 @@ namespace Blog_BrazorWebApp.Model
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
         public DateTime UpdateDate { get; set; } = DateTime.Now;
+
+        [ForeignKey("UserAccount")]
+        public int UserId { get; set; }
+
+        public UserAccount? UserAccount { get; set; }
     }
 }

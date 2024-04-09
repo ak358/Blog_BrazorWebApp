@@ -1,8 +1,8 @@
 ﻿@page "/Articles/edit"
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
-@using Blog_BrazorWebApp.Model
 @inject NavigationManager NavigationManager
-@using Microsoft.EntityFrameworkCore
+
+@attribute [Authorize]
 
 <PageTitle>Edit</PageTitle>
 

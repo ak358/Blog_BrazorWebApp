@@ -1,0 +1,24 @@
+﻿@page "/useraccounts"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
+@using Blog_BrazorWebApp.Model
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="useraccounts/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.UserAccounts">
+    <PropertyColumn Property="useraccount => useraccount.UserName" />
+    <PropertyColumn Property="useraccount => useraccount.Password" />
+    <PropertyColumn Property="useraccount => useraccount.RoleId" />
+
+    <TemplateColumn Context="useraccount">
+        <a href="@($"useraccounts/edit?id={useraccount.Id}")">Edit</a> |
+        <a href="@($"useraccounts/details?id={useraccount.Id}")">Details</a> |
+        <a href="@($"useraccounts/delete?id={useraccount.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

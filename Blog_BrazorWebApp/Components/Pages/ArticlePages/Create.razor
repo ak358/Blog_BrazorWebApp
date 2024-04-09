@@ -1,7 +1,7 @@
 ﻿@page "/articles/create"
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
-@using Blog_BrazorWebApp.Model
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 <PageTitle>新規作成</PageTitle>
 
@@ -14,6 +14,9 @@
         <EditForm method="post" Model="Article" OnValidSubmit="AddArticle" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
+
+            <InputNumber id="userid" @bind-Value="Article.UserId" class="form-control" type="hidden" />
+
             <div class="mb-3">
                 <label for="title" class="form-label">Title:</label> 
                 <InputText id="title" @bind-Value="Article.Title" class="form-control" /> 
@@ -43,9 +46,26 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    public HttpContext HttpContext{ get; set; }
 
     [SupplyParameterFromForm]
     public Article Article { get; set; } = new();
+
+    private string userName;
+    private int userId;
+
+    protected override void OnInitialized()
+    {
+        if (!HttpContext.User.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        userName = HttpContext.User.Identity.Name;
+        userId = DB.UserAccounts.Where(user => user.UserName == userName).FirstOrDefault().Id;
+        Article.UserId = userId;
+    }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddArticle()

@@ -1,0 +1,80 @@
+﻿@page "/register"
+@inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
+@using Blog_BrazorWebApp.Model
+@inject NavigationManager NavigationManager
+@using System.Security.Claims;
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>UserAccount</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="UserAccount" OnValidSubmit="AddUserAccount" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="username" class="form-label">UserName:</label> 
+                <InputText id="username" @bind-Value="UserAccount.UserName" class="form-control" /> 
+                <ValidationMessage For="() => UserAccount.UserName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label> 
+                <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" /> 
+                <ValidationMessage For="() => UserAccount.Password" class="text-danger" /> 
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password(confirm):</label>
+                <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" />
+                <ValidationMessage For="() => UserAccount.Password" class="text-danger" />
+            </div>
+            @if (RoleName == "administrator")
+            {
+                <div class="mb-3">
+                    <label for="roleid" class="form-label">RoleId:</label>
+                    <InputNumber id="roleid" @bind-Value="UserAccount.RoleId" class="form-control" />
+                    <ValidationMessage For="() => UserAccount.RoleId" class="text-danger" />
+                </div>
+
+            }
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/useraccounts">Back to List</a>
+</div>
+
+@code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    [SupplyParameterFromForm]
+    public UserAccount UserAccount { get; set; } = new();
+
+    private string RoleName;
+
+    protected override void OnInitialized()
+    {
+        if (!HttpContext.User.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        var user = HttpContext?.User;
+        if (user != null)
+        {
+            RoleName = user.FindFirstValue(ClaimTypes.Role);
+        }
+    }
+
+    public async Task AddUserAccount()
+    {
+        DB.UserAccounts.Add(UserAccount);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/useraccounts");
+    }
+}

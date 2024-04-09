@@ -1,8 +1,8 @@
-﻿@page "/"
+﻿@page "/articles"
 @rendermode InteractiveServer
-@using Microsoft.AspNetCore.Components.QuickGrid
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
-@using Blog_BrazorWebApp.Model
+
+@attribute [Authorize]
 
 <PageTitle>blog</PageTitle>
 
