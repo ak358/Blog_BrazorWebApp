@@ -9,6 +9,7 @@
 
 <PageTitle>Index</PageTitle>
 
+
 @if (HttpContext.User.Claims.FirstOrDefault(c => c.Value == "administrator") != null)
 {
     <h1>Index</h1>
@@ -16,10 +17,10 @@
         <a href="/register">Create New</a>
     </p>
 
-    <QuickGrid Class="table" Items="DB.UserAccounts">
+    <QuickGrid Class="table" Items="UserAccounts">
         <PropertyColumn Property="useraccount => useraccount.UserName" />
         <PropertyColumn Property="useraccount => useraccount.Password" />
-        <PropertyColumn Property="useraccount => useraccount.RoleId" />
+        <PropertyColumn Property="useraccount => useraccount.UserRole.RoleName" />
 
         <TemplateColumn Context="useraccount">
             <a href="@($"useraccounts/edit?id={useraccount.Id}")">Edit</a> |
@@ -37,8 +38,11 @@ else
     [CascadingParameter]
     public HttpContext HttpContext { get; set; }
 
+    private IQueryable<UserAccount> UserAccounts;
+
     protected override void OnInitialized()
     {
+        // UserRole を Include して UserAccounts を取得
+        UserAccounts = DB.UserAccounts.Include(u => u.UserRole);
     }
-
 }

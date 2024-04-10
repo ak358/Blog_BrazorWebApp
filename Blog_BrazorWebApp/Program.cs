@@ -49,7 +49,6 @@ namespace Blog_BrazorWebApp
             app.UseHttpsRedirection(); // HTTPSへのリダイレクトを有効化
 
             app.UseStaticFiles(); // 静的ファイルの提供を有効化
-            app.UseAntiforgery(); // CSRF対策のためのAntiforgeryミドルウェアを有効化
 
             app.UseAuthentication(); // 認証ミドルウェアを有効化
             app.UseAuthorization(); // 認可ミドルウェアを有効化
@@ -57,6 +56,7 @@ namespace Blog_BrazorWebApp
             app.MapRazorComponents<App>() // Razorコンポーネントのマッピングを設定
                 .AddInteractiveServerRenderMode(); // インタラクティブサーバーレンダリングモードを追加
 
+            app.UseAntiforgery(); // CSRF対策のためのAntiforgeryミドルウェアを有効化
 
             app.Run(); // アプリケーションを実行
         }

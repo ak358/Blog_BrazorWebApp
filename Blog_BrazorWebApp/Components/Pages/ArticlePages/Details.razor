@@ -4,7 +4,6 @@
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @inject IJSRuntime JSRuntime
 
-@attribute [Authorize]
 
 <PageTitle>Details</PageTitle>
 
@@ -17,11 +16,12 @@
     {
         <p><em>Loading...</em></p>
     }
-    else {
+    else
+    {
         <dl class="row">
             <dt class="col-sm-2">Title</dt>
             <dd class="col-sm-10">@article.Title</dd>
-            
+
             <dt class="col-sm-2">Content</dt>
 
             <dd class="col-sm-10">
@@ -34,14 +34,23 @@
             <dt class="col-sm-2">UpdateDate</dt>
             <dd class="col-sm-10">@article.UpdateDate</dd>
         </dl>
+        @if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            <div>
+                <a href="@($"/articles")">Back to Yout List</a>
+            </div>
+        }
         <div>
-            <a href="@($"/articles/edit?id={article.Id}")">Edit</a> |
-            <a href="@($"/")">Back to List</a>
+            <a href="@($"/")">Back to ALL Article</a>
         </div>
+
     }
 </div>
 
 @code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
     Article? article;
     [SupplyParameterFromQuery]
     public int Id { get; set; }

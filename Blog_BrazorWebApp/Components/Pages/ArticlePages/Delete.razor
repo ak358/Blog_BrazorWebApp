@@ -15,7 +15,8 @@
     {
         <p><em>Loading...</em></p>
     }
-    else {
+    else
+    {
         <dl class="row">
             <dt class="col-sm-2">Title</dt>
             <dd class="col-sm-10">@article.Title</dd>
@@ -34,7 +35,7 @@
         </dl>
         <EditForm method="post" Model="article" OnValidSubmit="DeleteArticle" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(article is null)">Delete</button> |
-            <a href="/">Back to List</a>
+            <a href="/articles">Back to List</a>
         </EditForm>
     }
 </div>
@@ -59,6 +60,6 @@
     {
         DB.Articles.Remove(article!);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/articles");
     }
 }

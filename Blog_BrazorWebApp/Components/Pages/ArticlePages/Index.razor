@@ -1,27 +1,41 @@
 ﻿@page "/articles"
-@rendermode InteractiveServer
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @attribute [Authorize]
 
 <PageTitle>blog</PageTitle>
 
-<h1>記事一覧</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1>@context.User.Identity.Name  の記事一覧</h1>
+    </Authorized>
+</AuthorizeView>
 
-<QuickGrid Class="table" Items="articleViewModels" Pagination="@pagination">
+@if (articleViewModels == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <hr />
+    <QuickGrid Class="table" Items="articleViewModels" Pagination="@pagination">
 
-    <p class="mejirushi">
-        <PropertyColumn title="title" Property="articleVM => articleVM.Title" />
-    </p>
-    <PropertyColumn Property="articleVM => articleVM.ContentHeader" />
-    <PropertyColumn Property="articleVM => articleVM.Data" Sortable="true" />
+        <p class="mejirushi">
+            <PropertyColumn title="title" Property="articleVM => articleVM.Title" />
+        </p>
+        <PropertyColumn Property="articleVM => articleVM.ContentHeader" />
+        <PropertyColumn Property="articleVM => articleVM.Data" Sortable="true" />
 
-    <TemplateColumn Context="articleViewModel">
-        <a href="@($"articles/edit?id={articleViewModel.Id}")">Edit</a> |
-        <a href="@($"articles/details?id={articleViewModel.Id}")">Details</a> |
-        <a href="@($"articles/delete?id={articleViewModel.Id}")">Delete</a>
-    </TemplateColumn>
+        <TemplateColumn Context="articleViewModel">
+            <a href="@($"articles/edit?id={articleViewModel.Id}")">Edit</a> |
+            <a href="@($"articles/details?id={articleViewModel.Id}")">Details</a> |
+            <a href="@($"articles/delete?id={articleViewModel.Id}")">Delete</a>
+        </TemplateColumn>
 
-</QuickGrid>
+    </QuickGrid>
+
+}
+
+
 
 <div class="page-buttons">
     Page:
@@ -42,19 +56,37 @@
 
 
 @code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    private string userName;
+    private int userId;
+
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     private IQueryable<ArticleViewModel>? articleViewModels;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        articleViewModels = DB.Articles
-    .Select(item => new ArticleViewModel
+        if (HttpContext != null)
         {
-            Id = item.Id,
-            Title = item.Title,
-            ContentHeader = item.Content.Length > 10 ? item.Content.Substring(0, 10) + "..." : item.Content,
-            Data = item.UpdateDate == item.CreateDate ? item.CreateDate : item.UpdateDate
-        });
+
+            userName = HttpContext.User.Identity.Name;
+            userId = DB.UserAccounts.FirstOrDefault(u => u.UserName == userName).Id;
+
+            var articles = await DB.Articles
+                    .Where(a => a.UserId == userId)
+                    .Select(item => new ArticleViewModel
+                        {
+                            Id = item.Id,
+                            Title = item.Title,
+                            ContentHeader = item.Content.Length > 10 ? item.Content.Substring(0, 10) + "..." : item.Content,
+                            Data = item.UpdateDate == item.CreateDate ? item.CreateDate : item.UpdateDate
+                        })
+                    .ToListAsync();
+
+            articleViewModels = articles.AsQueryable();
+
+        }
 
         pagination.TotalItemCountChanged += (sender, eventArgs) => StateHasChanged();
     }

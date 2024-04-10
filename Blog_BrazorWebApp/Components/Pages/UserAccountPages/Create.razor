@@ -11,20 +11,20 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="UserAccount" OnValidSubmit="AddUserAccount" FormName="create" Enhance>
+        <EditForm method="post" Model="RegisterViewModel" OnValidSubmit="AddUserAccount" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="username" class="form-label">UserName:</label> 
-                <InputText id="username" @bind-Value="UserAccount.UserName" class="form-control" />
+                <label for="username" class="form-label">UserName(EmailAdress):</label> 
+                <InputText id="username" @bind-Value="RegisterViewModel.UserName" class="form-control" />
             </div>        
             <div class="mb-3">
                 <label for="password" class="form-label">Password:</label> 
-                <InputText id="password" @bind-Value="UserAccount.Password" class="form-control" />
+                <InputText id="password" @bind-Value="RegisterViewModel.Password" class="form-control" />
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password(confirm):</label>
-                <Input id="password" class="form-control" />
+                <label for="password" class="form-label">Password(Confirm):</label>
+                <InputText id="password" @bind-Value="RegisterViewModel.ConfirmPassword" class="form-control" />
             </div>
             @if (RoleName == "administrator")
             {
@@ -43,17 +43,24 @@
         </EditForm>
     </div>
 </div>
+@if (HttpContext.User.Identity.IsAuthenticated && RoleName == "administrator")
+{
+    <div>
+        <a href="/useraccounts">Back to List</a>
+    </div>
+}
 
-<div>
-    <a href="/useraccounts">Back to List</a>
-</div>
 
 @code {
+    public string SomeValue { get; set; } = "Hello from ParentComponent!";
+
     [CascadingParameter]
     public HttpContext? HttpContext { get; set; }
 
-    [SupplyParameterFromForm]
     public UserAccount UserAccount { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    public RegisterViewModel RegisterViewModel { get; set; } = new();
 
     private List<UserRole> UserRoles;
     private int RoleId;
@@ -62,16 +69,15 @@
 
     protected override void OnInitialized()
     {
-        // ログインしていない場合は何もしない
+        // ユーザーのロールを取得
+        var user = HttpContext.User;
+        if (user != null)
+        {
+            RoleName = user.FindFirstValue(ClaimTypes.Role);
+        }
+
         if (HttpContext.User.Identity.IsAuthenticated)
         {
-            // ユーザーのロールを取得
-            var user = HttpContext.User;
-            if (user != null)
-            {
-                RoleName = user.FindFirstValue(ClaimTypes.Role);
-            }
-
             // UserRole テーブルからすべてのロールを取得
             UserRoles = DB.UserRoles.ToList();
 
@@ -81,9 +87,9 @@
     public async Task AddUserAccount()
     {
         // ユーザー名の重複チェック
-        if (DB.UserAccounts.Any(u => u.UserName == UserAccount.UserName))
+        if (DB.UserAccounts.Any(u => u.UserName == RegisterViewModel.UserName))
         {
-            return;
+            NavigationManager.NavigateTo("/access-denied");
         }
 
         if (SelectedRole != null)
@@ -95,12 +101,15 @@
             RoleName = "user";
         }
 
-        RoleId = DB.UserAccounts.FirstOrDefault(u => u.UserRole.RoleName == RoleName).RoleId;
+        RoleId = DB.UserRoles.FirstOrDefault(r => r.RoleName == RoleName).Id;
         UserAccount.RoleId = RoleId;
+
+        UserAccount.UserName = RegisterViewModel.UserName;
+        UserAccount.Password = RegisterViewModel.Password;
+        UserAccount.UserRole = DB.UserRoles.First(r => r.Id == RoleId);
 
         DB.UserAccounts.Add(UserAccount);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/login");
-
+        NavigationManager.NavigateTo("/success");
     }
 }

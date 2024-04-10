@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blog_BrazorWebApp.Model
 {
@@ -6,9 +8,11 @@ namespace Blog_BrazorWebApp.Model
     {
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "タイトルを入力してください。")]
         [Column(TypeName = "nvarchar(255)")]
         public string Title { get; set; } = "";
 
+        [Required(ErrorMessage = "コンテンツを入力してください。")]
         [Column(TypeName = "nvarchar(max)")]
         public string Content { get; set; } = "";
 

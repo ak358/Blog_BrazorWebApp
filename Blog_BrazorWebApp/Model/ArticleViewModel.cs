@@ -13,5 +13,7 @@ namespace Blog_BrazorWebApp.Model
         public string ContentHeader { get; set; } = "";
 
         public DateTime Data { get; set; }
+
+        public string? UserName { get; set; }
     }
 }
