@@ -15,8 +15,12 @@ namespace Blog_BrazorWebApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents() // Razorコンポーネントを追加
-                .AddInteractiveServerComponents(); // インタラクティブサーバーコンポーネントを追加
+            //builder.Services.AddRazorComponents() // Razorコンポーネントを追加
+            //    .AddInteractiveServerComponents(); // インタラクティブサーバーコンポーネントを追加
+
+            builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer("name=ConnectionStrings:DefaultConnection")); // データベースコンテキストを追加し、SQL Serverを使用するように構成
@@ -53,8 +57,12 @@ namespace Blog_BrazorWebApp
             app.UseAuthentication(); // 認証ミドルウェアを有効化
             app.UseAuthorization(); // 認可ミドルウェアを有効化
 
-            app.MapRazorComponents<App>() // Razorコンポーネントのマッピングを設定
-                .AddInteractiveServerRenderMode(); // インタラクティブサーバーレンダリングモードを追加
+            //app.MapRazorComponents<App>() // Razorコンポーネントのマッピングを設定
+            //    .AddInteractiveServerRenderMode(); // インタラクティブサーバーレンダリングモードを追加
+
+            app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode();
 
             app.UseAntiforgery(); // CSRF対策のためのAntiforgeryミドルウェアを有効化
 

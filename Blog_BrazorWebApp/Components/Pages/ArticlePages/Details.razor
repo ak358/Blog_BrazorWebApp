@@ -1,9 +1,9 @@
 ﻿@page "/articles/details"
+@rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
 @inject Blog_BrazorWebApp.Data.ApplicationDbContext DB
 @inject IJSRuntime JSRuntime
-
 
 <PageTitle>Details</PageTitle>
 
@@ -25,7 +25,15 @@
             <dt class="col-sm-2">Content</dt>
 
             <dd class="col-sm-10">
-                @article.Content
+                @if( body != null)
+                {
+                    @((MarkupString)body)
+                }
+                else
+                {
+                    @article.Content
+                }
+
             </dd>
 
             <dt class="col-sm-2">CreateDate</dt>
@@ -34,12 +42,13 @@
             <dt class="col-sm-2">UpdateDate</dt>
             <dd class="col-sm-10">@article.UpdateDate</dd>
         </dl>
-        @if (HttpContext.User.Identity.IsAuthenticated)
-        {
+        <AuthorizeView>
+            <Authorized>
             <div>
                 <a href="@($"/articles")">Back to Yout List</a>
             </div>
-        }
+        </Authorized>
+        </AuthorizeView>
         <div>
             <a href="@($"/")">Back to ALL Article</a>
         </div>
@@ -48,12 +57,15 @@
 </div>
 
 @code {
-    [CascadingParameter]
-    public HttpContext? HttpContext { get; set; }
-
     Article? article;
     [SupplyParameterFromQuery]
     public int Id { get; set; }
+
+    private string body;
+    private string test = "<p>Console.WriteLine(\"test\");</p>";
+
+
+    public HttpContextAccessor HttpContextAccessor { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,5 +77,16 @@
         }
 
     }
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     await JSRuntime.InvokeVoidAsync("initPrism");
+    // }
+
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     body = await JSRuntime.InvokeAsync<string>("marked.parse", article.Content);
+    // }
+
 
 }
